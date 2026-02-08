@@ -14,6 +14,7 @@ const StaffDashboard = () => {
     const [tables, setTables] = useState([]);
     const [requests, setRequests] = useState([]);
     const [orders, setOrders] = useState([]);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile sidebar state
 
     useEffect(() => {
         if (!token) {
@@ -163,10 +164,29 @@ const StaffDashboard = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex">
+        <div className="min-h-screen bg-gray-100 flex relative">
+            {/* Mobile Header for Hamburger */}
+            <div className="fixed top-0 left-0 right-0 h-16 bg-white shadow-sm flex items-center justify-between px-4 z-20 md:hidden">
+                <span className="font-bold text-lg text-gray-800">TableSync Staff</span>
+                <button
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    className="p-2 text-gray-600 focus:outline-none"
+                >
+                    {isSidebarOpen ? <XCircle size={28} /> : (
+                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    )}
+                </button>
+            </div>
+
             {/* Sidebar */}
-            <aside className="w-64 bg-white shadow-lg fixed h-full z-10">
-                <div className="p-6 border-b">
+            <aside className={`
+                w-64 bg-white shadow-lg fixed top-0 bottom-0 left-0 z-30 transition-transform duration-300 ease-in-out
+                ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+                md:translate-x-0 pt-16 md:pt-0
+            `}>
+                <div className="p-6 border-b hidden md:block">
                     <h1 className="text-2xl font-bold text-gray-800">TableSync</h1>
                     <p className="text-sm text-gray-500">Staff Dashboard</p>
                 </div>
@@ -183,8 +203,16 @@ const StaffDashboard = () => {
                 </div>
             </aside>
 
+            {/* Overlay for mobile sidebar */}
+            {isSidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black/50 z-20 md:hidden"
+                    onClick={() => setIsSidebarOpen(false)}
+                />
+            )}
+
             {/* Main Content */}
-            <main className="ml-64 flex-1 p-8">
+            <main className="flex-1 p-4 md:p-8 pt-20 md:pt-8 md:ml-64 transition-all duration-300">
                 {/* Pending Requests Section */}
                 {requests.length > 0 && (
                     <div className="mb-8">
