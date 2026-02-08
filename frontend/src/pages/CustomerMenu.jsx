@@ -67,7 +67,7 @@ const CustomerMenu = () => {
     // Redirect if session is closed or rejected
     useEffect(() => {
         if (status === 'closed' || status === 'rejected') {
-            navigate('/TableSync/');
+            navigate('/');
         }
     }, [status, navigate]);
 
